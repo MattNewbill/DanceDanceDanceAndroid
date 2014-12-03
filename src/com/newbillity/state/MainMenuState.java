@@ -24,6 +24,7 @@ public class MainMenuState extends State {
 	Button startButton;
 	Button aboutButton;
 	Button exitButton;
+	Textfield version;
 	
 	public MainMenuState(StateManager stateManager) {
 		super(stateManager);
@@ -40,6 +41,7 @@ public class MainMenuState extends State {
 			Bitmap startButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/start_button_original_armed.png"));
 			Bitmap aboutButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/about_button_original_armed.png"));
 			Bitmap exitButtonArmed = BitmapFactory.decodeStream(am.open("images/main_menu/exit_button_original_armed.png"));
+			Bitmap version_bitmap = BitmapFactory.decodeStream(am.open("images/interface_buttons/version_box.png"));
 			
 			//determine button coordinates
 			int startButtonX = (Game.G_WIDTH / 2) - startButtonDisarmed.getWidth() / 2;
@@ -53,6 +55,8 @@ public class MainMenuState extends State {
 			startButton = new Button(startButtonDisarmed, startButtonArmed, startButtonX, startButtonY);
 			aboutButton = new Button(aboutButtonDisarmed, aboutButtonArmed, aboutButtonX, aboutButtonY);
 			exitButton = new Button(exitButtonDisarmed, exitButtonArmed, exitButtonX, exitButtonY);
+			version = new Textfield(null, version_bitmap, version_bitmap, Game.VERSION_NUMBER_X, Game.VERSION_NUMBER_Y, "Version: " + Game.VERSION_NUMBER);
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -93,6 +97,8 @@ public class MainMenuState extends State {
 		
 		//draw exit button
 		exitButton.render(g);
+		
+		version.render(g);
 	}
 
 	@Override

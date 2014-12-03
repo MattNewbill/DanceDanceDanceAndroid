@@ -53,8 +53,12 @@ public class Game extends Activity implements StateManager {
 
 	// width and height that the game is optimized for and
 	// that positioning is calculated for
+	public static final double VERSION_NUMBER = 0.81;
 	public static final int G_WIDTH = 720;
 	public static final int G_HEIGHT = 1280;
+	
+	public static final int VERSION_NUMBER_X = G_WIDTH - 250;
+	public static final int VERSION_NUMBER_Y = G_HEIGHT - 50;
 
 	// actual width and height of phone
 	public static int P_WIDTH;
