@@ -26,28 +26,29 @@ public class RenderView extends SurfaceView implements Runnable {
 	SurfaceHolder holder;
 	Graphics2D drawingCanvas;
 	volatile boolean isRunning = false;
-	
-	final int TARGET_FPS = 30;
-	final int TARGET_UPDATES = 30;
+
+	public static final int MAX_FRAME_SKIPS = 5;
+	public static final int TARGET_FPS = 30;
+	public static final int TARGET_UPDATES = 30;
 	int targetFPSTime = 1000 / TARGET_FPS;
 	int targetUpdateTime = 1000 / TARGET_UPDATES;
-	
+
 	Paint fpsPaint;
-	
+
 	public RenderView(Game game, Bitmap frameBuffer) {
 		super(game);
 		this.game = game;
 		this.frameBuffer = frameBuffer;
 		holder = getHolder();
 		drawingCanvas = new GraphicsCPU(frameBuffer);
-		//drawingCanvas = new GraphicsCPU();
-		
+		// drawingCanvas = new GraphicsCPU();
+
 		fpsPaint = new Paint();
 		fpsPaint.setColor(Color.WHITE);
 		fpsPaint.setTextSize(24);
 	}
 
-	public void run() {
+public void run() {
 		
 		Rect destinationRect = new Rect();
 		long accumulator = 0;
@@ -56,10 +57,15 @@ public class RenderView extends SurfaceView implements Runnable {
 		long fps = 0;
 		int frames = 0;
 		
+		int framesSkipped;
+		
 		//debug
 		long startTimeUpdate;
 		long startTimeRender;
 		long drawTime = 0;
+		
+		int sleepTime = 0;      // ms to sleep (<0 if we're behind)
+
 		
 		while(isRunning) {
 			//long startTime = System.currentTimeMillis();
@@ -73,7 +79,7 @@ public class RenderView extends SurfaceView implements Runnable {
 			
 			startTimeSleep = System.nanoTime();
 			long delta = System.currentTimeMillis() - startTimeSleep;
-			
+			framesSkipped = 0;
 			//update
 			startTimeUpdate = System.currentTimeMillis();
 			//while(accumulator >= targetUpdateTime) {
@@ -100,9 +106,43 @@ public class RenderView extends SurfaceView implements Runnable {
 				canvas.drawBitmap(frameBuffer, 0, 0, null);
 			holder.unlockCanvasAndPost(canvas);
 			drawTime = System.currentTimeMillis() - startTimeCleanup;
+
+			//accumulator += System.currentTimeMillis() - startTime;
+			
+			
+			//sleep if we've rendered faster than our target tick time
+			long elapsedTime;
+			//because we freakin can
+			while(true) {
+				elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
+				if(elapsedTime >= targetFPSTime) {
+					break;
+				}
+				
+			}
+			sleepTime = (int)(targetFPSTime - elapsedTime);
+			while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
+				// we need to catch up
+				// update without rendering
+				game.getCurrentState().update(delta);
+				// add frame period to check if in next frame
+				sleepTime += targetFPSTime;
+				framesSkipped++;
+			}
+			
+			/*
+			long elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
+			if(elapsedTime < targetFPSTime) {
+				try {
+					Thread.sleep(targetFPSTime - elapsedTime);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			*/
 			
 			//other fps stuff
-			long elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
+			elapsedTime = (System.nanoTime() - startTimeFrame) / 1000000;
 			frames++;
 			if(elapsedTime > 1000) {
 				fps = frames;
@@ -110,37 +150,23 @@ public class RenderView extends SurfaceView implements Runnable {
 				startTimeFrame = System.nanoTime();
 			}
 			
-			//accumulator += System.currentTimeMillis() - startTime;
-			
-			
-			//sleep if we've rendered faster than our target tick time
-			elapsedTime = (System.nanoTime() - startTimeSleep) / 1000000;
-			if(elapsedTime < targetFPSTime) {
-				//Log.i("combatgame", "TTS: " + (targetFPSTime - elapsedTime));
-				try {
-					Thread.sleep(targetFPSTime - elapsedTime);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
 		}
 	}
-	
+
 	public void resume() {
 		isRunning = true;
 		renderThread = new Thread(this);
 		renderThread.start();
 	}
-	
+
 	public void pause() {
 		isRunning = false;
-		while(true) {
+		while (true) {
 			try {
 				renderThread.join();
 				return;
-			} catch(InterruptedException e) {
-				//do nothing
+			} catch (InterruptedException e) {
+				// do nothing
 			}
 		}
 	}

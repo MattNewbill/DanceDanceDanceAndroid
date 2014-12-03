@@ -1,14 +1,12 @@
 package com.newbillity.state;
 
-import combatgame.widgets.*;
-import combatgame.state.AboutState;
-import combatgame.state.ConnectionState;
-import combatgame.state.State;
-import combatgame.util.Util;
-import combatgame.input.*;
-import combatgame.main.*;
-import combatgame.graphics.*;
-import combatgame.main.StateManager;
+import com.newbillity.widgets.*;
+import com.newbillity.state.State;
+import com.newbillity.util.Util;
+import com.newbillity.input.*;
+import com.newbillity.main.*;
+import com.newbillity.graphics.*;
+import com.newbillity.main.StateManager;
 import java.util.List;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -70,7 +68,7 @@ public class MainMenuState extends State {
 		if(startButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "start button pressed");
 			//bring up the next screen, whether that's the connection screen or straight to the game screen
-			stateManager.setState(new ConnectionState(stateManager));
+			stateManager.setState(new SongSelectionState(stateManager));
 		}
 		else if(aboutButton.state == Button.ACTIVATED) {
 			Log.i("combatgame", "about button pressed");

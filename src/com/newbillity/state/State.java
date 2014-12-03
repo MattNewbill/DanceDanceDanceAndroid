@@ -1,7 +1,7 @@
 package com.newbillity.state;
 
-import combatgame.main.*;
-import combatgame.graphics.*;
+import com.newbillity.main.*;
+import com.newbillity.graphics.*;
 
 /**
  * **HAPPY**

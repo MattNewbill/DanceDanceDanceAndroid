@@ -1,9 +1,8 @@
 package com.newbillity.input;
 
-import combatgame.input.Pool;
-import combatgame.input.TouchEvent;
-import combatgame.input.Pool.*;
-import combatgame.main.Game;
+import com.newbillity.input.TouchEvent;
+import com.newbillity.input.Pool.*;
+import com.newbillity.main.Game;
 
 import java.util.List;
 import java.util.ArrayList;

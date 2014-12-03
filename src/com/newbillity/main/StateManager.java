@@ -2,8 +2,8 @@ package com.newbillity.main;
 
 import com.newbillity.input.TouchHandler;
 
-import combatgame.main.*;
-import combatgame.state.State;
+import com.newbillity.main.*;
+import com.newbillity.state.State;
 
 /**
  * **HAPPY**
