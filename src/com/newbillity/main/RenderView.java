@@ -27,7 +27,7 @@ public class RenderView extends SurfaceView implements Runnable {
 	Graphics2D drawingCanvas;
 	volatile boolean isRunning = false;
 
-	public static final int MAX_FRAME_SKIPS = 5;
+	public static final int MAX_FRAME_SKIPS = 10;
 	public static final int TARGET_FPS = 30;
 	public static final int TARGET_UPDATES = 30;
 	int targetFPSTime = 1000 / TARGET_FPS;

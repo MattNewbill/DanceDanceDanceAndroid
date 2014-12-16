@@ -2,10 +2,8 @@ package com.newbillity.main;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
@@ -29,6 +27,7 @@ import com.newbillity.dancedancedance.R;
 import com.newbillity.input.TouchHandler;
 import com.newbillity.state.MainMenuState;
 import com.newbillity.state.State;
+import com.newbillity.testingobjects.StepData;
 import com.newbillity.testingobjects.TouchData;
 
 /**
@@ -220,11 +219,37 @@ public class Game extends Activity implements StateManager {
 		}
 		try {
 			// BufferedWriter for performance, true to set append to file flag
-			BufferedWriter buf = new BufferedWriter(new FileWriter(testFolder + "/dance"+System.currentTimeMillis() + ".txt",
+			BufferedWriter buf = new BufferedWriter(new FileWriter(testFolder + "/" + fileName + System.currentTimeMillis() + ".txt",
 					true));
 			
 			for (TouchData touchData : touchDataPoints) {
 				buf.append(touchData.toStringToFile());
+				buf.newLine();
+			}
+			buf.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void saveStepsToFile(ArrayList<StepData> stepDataPoints,
+			String fileName) {
+		File testFolder = new File(Environment.getExternalStorageDirectory(),
+				"DanceDanceDanceOutputs");
+		if (!testFolder.exists()) {
+			try {
+				testFolder.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			// BufferedWriter for performance, true to set append to file flag
+			BufferedWriter buf = new BufferedWriter(new FileWriter(testFolder + "/" + fileName +System.currentTimeMillis() + ".txt",
+					true));
+			
+			for (StepData stepData : stepDataPoints) {
+				buf.append(stepData.toStringToFile());
 				buf.newLine();
 			}
 			buf.close();
